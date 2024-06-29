@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotation</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+       padding: 20px;
+    }
+    .quotation-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .quotation-header {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .quotation-header2 {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+    .quotation-details {
+      margin-bottom: 20px;
+    }
+    .quotation-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .quotation-table th,
+    .quotation-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    .quotation-total {
+      margin-top: 20px;
+      text-align: right;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="quotation-header">
+        <img src="img/lg2.png" width="300px">
+      </div>  
+      <div class="quotation-header2">
+     <h2 class="mb-4">Quotation</h2></div>
+     <div id="quotationDetails"></div>
+     <button class="btn btn-primary no-print" onclick="window.print()">Print</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const quotationDetails = document.getElementById('quotationDetails');
+
+      const items = [];
+      params.forEach((value, key) => {
+        items.push({ key, value });
+      });
+
+      let html = '<table class="table table-bordered">';
+      html += '<thead><tr><th>Item</th><th>Details</th><th>Quantity</th><th>Price</th></tr></thead>';
+      html += '<tbody>';
+
+      items.forEach((item, index) => {
+        if (item.key.includes('customFieldName')) {
+          const fieldIndex = item.key.replace('customFieldName', '');
+          const details = params.get(`customDetails${fieldIndex}`);
+          const quantity = params.get(`customQuantity${fieldIndex}`);
+          const price = params.get(`customPrice${fieldIndex}`);
+          
+          if (quantity && price) {
+            html += `<tr><td>${item.value}</td><td>${details}</td><td>${quantity}</td><td>${price}</td></tr>`;
+          }
+        } else if (item.key.includes('Details') && !item.key.includes('Quantity') && !item.key.includes('Price')) {
+          const details = params.get(`phoneModelDetails`);
+          const quantity = params.get(`phoneModelQuantity`);
+          const price = params.get(`phoneModelPrice`);
+
+          if (quantity && price) {
+            html += `<tr><td>${item.value}</td><td>${details}</td><td>${quantity}</td><td>${price}</td></tr>`;
+          }
+        }
+      });
+
+      html += '</tbody></table>';
+      html += `<p>Subtotal: ${params.get('subTotal')}</p>`;
+      html += `<p>Discount: ${params.get('discount')}%</p>`;
+      html += `<p>Tax: ${params.get('tax')}%</p>`;
+      html += `<p>Total: ${params.get('total')}</p>`;
+
+      quotationDetails.innerHTML = html;
+    });
+  </script>
+</body>
+</html>

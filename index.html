@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Sale Quotation</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px;
+    }
+    .error {
+      color: red;
+    }
+    .container-header {
+      text-align: left;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    .container-header2 {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="container-header">
+      <img src="img/lg2.png" width="400px">
+      <p>No.60,janaudhanagama
+        <br>morakawa
+        <br>0769763753
+      </p>
+      <h1 class="mb-4">Phone Sale Quotation</h1>
+      <form id="quotationForm">
+        <div class="error" id="error"></div>
+
+        <!-- Customer information fields -->
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="customerName">Customer Name</label>
+            <input type="text" class="form-control" id="customerName" placeholder="Enter customer name">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="customerAddress">Address</label>
+            <input type="text" class="form-control" id="customerAddress" placeholder="Enter customer address">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="customerPhone">Phone Number</label>
+            <input type="text" class="form-control" id="customerPhone" placeholder="Enter customer phone number">
+          </div>
+        </div>
+
+        <!-- Existing fields here -->
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="phoneModel">Phone Model</label>
+            <input type="text" class="form-control" id="phoneModel" placeholder="Enter phone model">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="phoneModelDetails">Details</label>
+            <input type="text" class="form-control" id="phoneModelDetails" placeholder="Enter details">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="phoneModelQuantity">Quantity</label>
+            <input type="number" class="form-control" id="phoneModelQuantity" placeholder="Enter quantity" onchange="calculateTotal()">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="phoneModelPrice">Price</label>
+            <input type="number" class="form-control" id="phoneModelPrice" placeholder="Enter price" onchange="calculateTotal()">
+          </div>
+        </div>
+
+        <!-- New fields for Charger, Tempered Glass, and Back Cover -->
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="charger">Charger</label>
+            <input type="text" class="form-control" id="charger" placeholder="Enter charger details">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="chargerDetails">Details</label>
+            <input type="text" class="form-control" id="chargerDetails" placeholder="Enter details">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="chargerQuantity">Quantity</label>
+            <input type="number" class="form-control" id="chargerQuantity" placeholder="Enter quantity" onchange="calculateTotal()">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="chargerPrice">Price</label>
+            <input type="number" class="form-control" id="chargerPrice" placeholder="Enter price" onchange="calculateTotal()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="temperedGlass">Tempered Glass</label>
+            <input type="text" class="form-control" id="temperedGlass" placeholder="Enter tempered glass details">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="temperedGlassDetails">Details</label>
+            <input type="text" class="form-control" id="temperedGlassDetails" placeholder="Enter details">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="temperedGlassQuantity">Quantity</label>
+            <input type="number" class="form-control" id="temperedGlassQuantity" placeholder="Enter quantity" onchange="calculateTotal()">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="temperedGlassPrice">Price</label>
+            <input type="number" class="form-control" id="temperedGlassPrice" placeholder="Enter price" onchange="calculateTotal()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="backCover">Back Cover</label>
+            <input type="text" class="form-control" id="backCover" placeholder="Enter back cover details">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="backCoverDetails">Details</label>
+            <input type="text" class="form-control" id="backCoverDetails" placeholder="Enter details">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="backCoverQuantity">Quantity</label>
+            <input type="number" class="form-control" id="backCoverQuantity" placeholder="Enter quantity" onchange="calculateTotal()">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="backCoverPrice">Price</label>
+            <input type="number" class="form-control" id="backCoverPrice" placeholder="Enter price" onchange="calculateTotal()">
+          </div>
+        </div>
+
+        <!-- Container for additional fields -->
+        <div id="additionalFields"></div>
+
+        <!-- Fields for subtotal, discount, tax, and total -->
+        <div class="form-row mt-4">
+          <div class="form-group col-md-3">
+            <label for="subTotal">Subtotal</label>
+            <input type="number" class="form-control" id="subTotal" readonly>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="discount">Discount (%)</label>
+            <input type="number" class="form-control" id="discount" value="0" onchange="calculateTotal()">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="tax">Tax (%)</label>
+            <input type="number" class="form-control" id="tax" value="0" onchange="calculateTotal()">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="total">Total</label>
+            <input type="number" class="form-control" id="total" readonly>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="addField()">Add Field</button>
+        <button type="button" class="btn btn-success" onclick="generateQuotationAndPrint()">Download and Print</button>
+      </form>
+
+      <!-- Dropdown to select and load saved quotations -->
+      <div class="mt-4">
+        <h2 class="mt-4">Saved Quotations</h2>
+        <select id="savedQuotationsDropdown" class="form-control mb-2"></select>
+        <button type="button" class="btn btn-info" onclick="loadSelectedQuotation()">Load Selected Quotation</button>
+        <ul id="savedQuotationsList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let fieldCounter = 1;
+    let db;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFieldsFromLocalStorage();
+      openDatabase();
+    });
+
+    function openDatabase() {
+      const request = indexedDB.open('quotationsDB', 1);
+
+      request.onerror = function(event) {
+        console.error('Database error:', event.target.errorCode);
+      };
+
+      request.onsuccess = function(event) {
+        db = event.target.result;
+        loadSavedQuotations();
+      };
+
+      request.onupgradeneeded = function(event) {
+        db = event.target.result;
+        const objectStore = db.createObjectStore('quotations', { keyPath: 'id', autoIncrement: true });
+        objectStore.createIndex('date', 'date', { unique: false });
+      };
+    }
+
+    function saveQuotationToIndexedDB(quotation) {
+      const transaction = db.transaction(['quotations'], 'readwrite');
+      const objectStore = transaction.objectStore('quotations');
+      const request = objectStore.add(quotation);
+
+      request.onsuccess = function(event) {
+        loadSavedQuotations();
+      };
+
+      request.onerror = function(event) {
+        console.error('Error adding quotation:', event.target.errorCode);
+      };
+    }
+
+    function loadSavedQuotations() {
+      const transaction = db.transaction(['quotations'], 'readonly');
+      const objectStore = transaction.objectStore('quotations');
+      const request = objectStore.getAll();
+
+      request.onsuccess = function(event) {
+        const quotations = event.target.result;
+        const dropdown = document.getElementById('savedQuotationsDropdown');
+        dropdown.innerHTML = '';
+
+        quotations.forEach(quotation => {
+          const option = document.createElement('option');
+          option.value = quotation.id;
+          option.textContent = `${quotation.date} - ${quotation.customerName}`;
+          dropdown.appendChild(option);
+        });
+      };
+
+      request.onerror = function(event) {
+        console.error('Error loading quotations:', event.target.errorCode);
+      };
+    }
+
+    function loadSelectedQuotation() {
+      const selectedId = document.getElementById('savedQuotationsDropdown').value;
+      if (!selectedId) return;
+
+      const transaction = db.transaction(['quotations'], 'readonly');
+      const objectStore = transaction.objectStore('quotations');
+      const request = objectStore.get(parseInt(selectedId));
+
+      request.onsuccess = function(event) {
+        const quotation = event.target.result;
+        if (quotation) {
+          document.getElementById('customerName').value = quotation.customerName;
+          document.getElementById('customerAddress').value = quotation.customerAddress;
+          document.getElementById('customerPhone').value = quotation.customerPhone;
+          document.getElementById('phoneModel').value = quotation.items[0].name;
+          document.getElementById('phoneModelDetails').value = quotation.items[0].details;
+          document.getElementById('phoneModelQuantity').value = quotation.items[0].quantity;
+          document.getElementById('phoneModelPrice').value = quotation.items[0].price;
+
+          // Set values for charger, tempered glass, back cover
+          document.getElementById('charger').value = quotation.items[1].name;
+          document.getElementById('chargerDetails').value = quotation.items[1].details;
+          document.getElementById('chargerQuantity').value = quotation.items[1].quantity;
+          document.getElementById('chargerPrice').value = quotation.items[1].price;
+          document.getElementById('temperedGlass').value = quotation.items[2].name;
+          document.getElementById('temperedGlassDetails').value = quotation.items[2].details;
+          document.getElementById('temperedGlassQuantity').value = quotation.items[2].quantity;
+          document.getElementById('temperedGlassPrice').value = quotation.items[2].price;
+          document.getElementById('backCover').value = quotation.items[3].name;
+          document.getElementById('backCoverDetails').value = quotation.items[3].details;
+          document.getElementById('backCoverQuantity').value = quotation.items[3].quantity;
+          document.getElementById('backCoverPrice').value = quotation.items[3].price;
+
+          calculateTotal();
+        }
+      };
+
+      request.onerror = function(event) {
+        console.error('Error loading quotation:', event.target.errorCode);
+      };
+    }
+
+    function addField() {
+      const container = document.getElementById('additionalFields');
+      const fieldHTML = `
+        <div class="form-row" id="fieldRow${fieldCounter}">
+          <div class="form-group col-md-3">
+            <label for="customFieldName${fieldCounter}">Field Name</label>
+            <input type="text" class="form-control" id="customFieldName${fieldCounter}" placeholder="Enter field name">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="customDetails${fieldCounter}">Details</label>
+            <input type="text" class="form-control" id="customDetails${fieldCounter}" placeholder="Enter details">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="customQuantity${fieldCounter}">Quantity</label>
+            <input type="number" class="form-control" id="customQuantity${fieldCounter}" placeholder="Enter quantity">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="customPrice${fieldCounter}">Price</label>
+            <input type="number" class="form-control" id="customPrice${fieldCounter}" placeholder="Enter price">
+          </div>
+          <div class="form-group col-md-1">
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-danger btn-block" onclick="removeField(${fieldCounter})">Remove</button>
+          </div>
+        </div>`;
+      container.insertAdjacentHTML('beforeend', fieldHTML);
+      fieldCounter++;
+      saveFieldsToLocalStorage();
+    }
+
+    function removeField(fieldId) {
+      const fieldRow = document.getElementById(`fieldRow${fieldId}`);
+      if (fieldRow) {
+        fieldRow.remove();
+        saveFieldsToLocalStorage();
+      }
+    }
+
+    function calculateTotal() {
+      const form = document.getElementById('quotationForm');
+      const elements = form.elements;
+      let subTotal = 0;
+
+      [...elements].forEach(el => {
+        if (el.id.includes('Price')) {
+          const quantityEl = document.getElementById(el.id.replace('Price', 'Quantity'));
+          const quantity = quantityEl ? parseInt(quantityEl.value) : 0;
+          const price = parseInt(el.value);
+          subTotal += (quantity * price) || 0;
+        }
+      });
+
+      const discount = parseInt(document.getElementById('discount').value) || 0;
+      const tax = parseInt(document.getElementById('tax').value) || 0;
+
+      const discountAmount = (subTotal * discount) / 100;
+      const taxAmount = (subTotal * tax) / 100;
+      const total = subTotal - discountAmount + taxAmount;
+
+      document.getElementById('subTotal').value = subTotal;
+      document.getElementById('total').value = total;
+    }
+
+    function saveFieldsToLocalStorage() {
+      const additionalFields = document.getElementById('additionalFields').innerHTML;
+      localStorage.setItem('additionalFields', additionalFields);
+    }
+
+    function loadFieldsFromLocalStorage() {
+      const additionalFields = localStorage.getItem('additionalFields');
+      if (additionalFields) {
+        document.getElementById('additionalFields').innerHTML = additionalFields;
+      }
+    }
+
+    function generateQuotationAndPrint() {
+      calculateTotal();
+      const form = document.getElementById('quotationForm');
+      const elements = form.elements;
+      let url = 'quotation.html?';
+
+      const quotation = {
+        customerName: document.getElementById('customerName').value,
+        customerAddress: document.getElementById('customerAddress').value,
+        customerPhone: document.getElementById('customerPhone').value,
+        subTotal: document.getElementById('subTotal').value,
+        discount: document.getElementById('discount').value,
+        tax: document.getElementById('tax').value,
+        total: document.getElementById('total').value,
+        date: new Date().toLocaleString(),
+        items: []
+      };
+
+      [...elements].forEach(el => {
+        if (el.id && el.value) {
+          url += `${el.id}=${encodeURIComponent(el.value)}&`;
+          if (el.id.includes('customFieldName')) {
+            const fieldIndex = el.id.replace('customFieldName', '');
+            const details = document.getElementById(`customDetails${fieldIndex}`).value;
+            const quantity = document.getElementById(`customQuantity${fieldIndex}`).value;
+            const price = document.getElementById(`customPrice${fieldIndex}`).value;
+
+            quotation.items.push({
+              name: el.value,
+              details,
+              quantity,
+              price
+            });
+          }
+        }
+      });
+
+      saveQuotationToIndexedDB(quotation);
+      window.location.href = url.slice(0, -1);
+    }
+  </script>
+</body>
+</html>
